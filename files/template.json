@@ -1,0 +1,417 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_TTU_name": {
+            "defaultValue": "TTU",
+            "type": "String"
+        },
+        "networkInterfaces_ttu472_name": {
+            "defaultValue": "ttu472",
+            "type": "String"
+        },
+        "publicIPAddresses_TTU_ip_name": {
+            "defaultValue": "TTU-ip",
+            "type": "String"
+        },
+        "virtualNetworks_TTU_New_vnet_name": {
+            "defaultValue": "TTU_New-vnet",
+            "type": "String"
+        },
+        "networkSecurityGroups_TTU_nsg_name": {
+            "defaultValue": "TTU-nsg",
+            "type": "String"
+        },
+        "storageAccounts_ttunewdiag331_name": {
+            "defaultValue": "ttunewdiag331",
+            "type": "String"
+        },
+        "subnets_default_name": {
+            "defaultValue": "default",
+            "type": "String"
+        },
+        "disks_TTU_OsDisk_1_173002d8e50443e3b30445fd4e17ec71_name": {
+            "defaultValue": "TTU_OsDisk_1_173002d8e50443e3b30445fd4e17ec71",
+            "type": "String"
+        },
+        "securityRules_default_allow_ssh_name": {
+            "defaultValue": "default-allow-ssh",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/TTU_New/providers/Microsoft.Compute/disks/TTU_OsDisk_1_173002d8e50443e3b30445fd4e17ec71'.",
+            "type": "Microsoft.Compute/disks",
+            "name": "[parameters('disks_TTU_OsDisk_1_173002d8e50443e3b30445fd4e17ec71_name')]",
+            "apiVersion": "2016-04-30-preview",
+            "location": "centralus",
+            "scale": null,
+            "properties": {
+                "accountType": "Premium_LRS",
+                "osType": "Linux",
+                "creationData": {
+                    "createOption": "FromImage",
+                    "imageReference": {
+                        "id": "/Subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/Providers/Microsoft.Compute/Locations/centralus/Publishers/SUSE/ArtifactTypes/VMImage/Offers/SLES/Skus/11-SP4/Versions/latest"
+                    }
+                },
+                "diskSizeGB": 30
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/TTU_New/providers/Microsoft.Compute/virtualMachines/TTU'.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[parameters('virtualMachines_TTU_name')]",
+            "apiVersion": "2016-04-30-preview",
+            "location": "centralus",
+            "scale": null,
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS1"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "SUSE",
+                        "offer": "SLES",
+                        "sku": "11-SP4",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_TTU_name'),'_OsDisk_1_173002d8e50443e3b30445fd4e17ec71')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[resourceId('Microsoft.Compute/disks', parameters('disks_TTU_OsDisk_1_173002d8e50443e3b30445fd4e17ec71_name'))]"
+                        },
+                        "diskSizeGB": 30
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_TTU_name')]",
+                    "adminUsername": "azureuser",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false
+                    },
+                    "secrets": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_ttu472_name'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https', '://', parameters('storageAccounts_ttunewdiag331_name'), '.blob.core.windows.net', '/')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/disks', parameters('disks_TTU_OsDisk_1_173002d8e50443e3b30445fd4e17ec71_name'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaces_ttu472_name'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ttunewdiag331_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/TTU_New/providers/Microsoft.Network/networkInterfaces/ttu472'.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[parameters('networkInterfaces_ttu472_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "centralus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "fb7984ec-434f-4ac3-9240-689f9800d713",
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "etag": "W/\"99ff2b4e-24b8-49ac-b3c2-207a761512d6\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "privateIPAddress": "10.0.0.4",
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_TTU_ip_name'))]"
+                            },
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_TTU_New_vnet_name'), parameters('subnets_default_name'))]"
+                            },
+                            "primary": true,
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "dnsSettings": {
+                    "dnsServers": [],
+                    "appliedDnsServers": [],
+                    "internalDomainNameSuffix": "sqgumrcxza2utk41hnntrj2n2a.gx.internal.cloudapp.net"
+                },
+                "macAddress": "00-0D-3A-94-36-04",
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false,
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_TTU_nsg_name'))]"
+                },
+                "primary": true,
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_TTU_name'))]"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddresses_TTU_ip_name'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworks_TTU_New_vnet_name'), parameters('subnets_default_name'))]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_TTU_nsg_name'))]",
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_TTU_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/TTU_New/providers/Microsoft.Network/networkSecurityGroups/TTU-nsg'.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('networkSecurityGroups_TTU_nsg_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "centralus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "4fe499fe-81d6-4822-8bcd-14420f175a68",
+                "securityRules": [
+                    {
+                        "name": "default-allow-ssh",
+                        "etag": "W/\"0b4de803-f01c-4da4-b380-11f9340d2aeb\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "protocol": "TCP",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "22",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 1000,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ],
+                "defaultSecurityRules": [
+                    {
+                        "name": "AllowVnetInBound",
+                        "etag": "W/\"0b4de803-f01c-4da4-b380-11f9340d2aeb\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowAzureLoadBalancerInBound",
+                        "etag": "W/\"0b4de803-f01c-4da4-b380-11f9340d2aeb\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow inbound traffic from azure load balancer",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "AzureLoadBalancer",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllInBound",
+                        "etag": "W/\"0b4de803-f01c-4da4-b380-11f9340d2aeb\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all inbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Inbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowVnetOutBound",
+                        "etag": "W/\"0b4de803-f01c-4da4-b380-11f9340d2aeb\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to all VMs in VNET",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "VirtualNetwork",
+                            "destinationAddressPrefix": "VirtualNetwork",
+                            "access": "Allow",
+                            "priority": 65000,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "AllowInternetOutBound",
+                        "etag": "W/\"0b4de803-f01c-4da4-b380-11f9340d2aeb\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Allow outbound traffic from all VMs to Internet",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "Internet",
+                            "access": "Allow",
+                            "priority": 65001,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    },
+                    {
+                        "name": "DenyAllOutBound",
+                        "etag": "W/\"0b4de803-f01c-4da4-b380-11f9340d2aeb\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "description": "Deny all outbound traffic",
+                            "protocol": "*",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "*",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Deny",
+                            "priority": 65500,
+                            "direction": "Outbound",
+                            "sourceAddressPrefixes": [],
+                            "destinationAddressPrefixes": []
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/TTU_New/providers/Microsoft.Network/publicIPAddresses/TTU-ip'.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[parameters('publicIPAddresses_TTU_ip_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "centralus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "b2cfa87a-e03e-4d47-a6ac-ce5c81d7b92b",
+                "ipAddress": "52.173.241.151",
+                "publicIPAddressVersion": "IPv4",
+                "publicIPAllocationMethod": "Dynamic",
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/TTU_New/providers/Microsoft.Network/virtualNetworks/TTU_New-vnet'.",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('virtualNetworks_TTU_New_vnet_name')]",
+            "apiVersion": "2017-06-01",
+            "location": "centralus",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceGuid": "44460d94-c857-4939-abdb-3b5b38a78de0",
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/24"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "default",
+                        "etag": "W/\"b9bd0e99-a044-4f55-b9fb-69e79defcab8\"",
+                        "properties": {
+                            "provisioningState": "Succeeded",
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    }
+                ],
+                "virtualNetworkPeerings": []
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/ttu_new/providers/Microsoft.Storage/storageAccounts/ttunewdiag331'.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "name": "[parameters('storageAccounts_ttunewdiag331_name')]",
+            "apiVersion": "2016-01-01",
+            "location": "centralus",
+            "tags": {},
+            "scale": null,
+            "properties": {},
+            "dependsOn": []
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/TTU_New/providers/Microsoft.Network/networkSecurityGroups/TTU-nsg/securityRules/default-allow-ssh'.",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(parameters('networkSecurityGroups_TTU_nsg_name'), '/', parameters('securityRules_default_allow_ssh_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "protocol": "TCP",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroups_TTU_nsg_name'))]"
+            ]
+        },
+        {
+            "comments": "Generalized from resource: '/subscriptions/4fb88720-243f-4b14-b3b1-011dabdcfcfc/resourceGroups/TTU_New/providers/Microsoft.Network/virtualNetworks/TTU_New-vnet/subnets/default'.",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(parameters('virtualNetworks_TTU_New_vnet_name'), '/', parameters('subnets_default_name'))]",
+            "apiVersion": "2017-06-01",
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "addressPrefix": "10.0.0.0/24"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworks_TTU_New_vnet_name'))]"
+            ]
+        }
+    ]
+}
